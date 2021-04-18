@@ -12,9 +12,12 @@ export class AccommodationsService {
 
   create(accommodationsData: CreateAccommodationsDto) {
     // doc id은 자동 생성하게 두고 document를 만듬
-    this.db
+    return this.db
       .collection('accommodations')
       .doc()
       .set({ ...accommodationsData });
+  }
+  getAll() {
+    return;
   }
 }

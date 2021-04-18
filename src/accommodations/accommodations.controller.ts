@@ -8,7 +8,6 @@ export class AccommodationsController {
 
   @Post()
   create(@Body() accommodationsData: CreateAccommodationsDto) {
-    this.accommodationsService.create(accommodationsData);
-    return 'Done!';
+    return this.accommodationsService.create(accommodationsData);
   }
 }
