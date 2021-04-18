@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateAccommodationsDto } from './dto/create-accommodations.dto';
 import { Firestore } from '@google-cloud/firestore';
+import { DocumentData } from '@google-cloud/firestore';
 
 @Injectable()
 export class AccommodationsService {
@@ -17,7 +18,14 @@ export class AccommodationsService {
       .doc()
       .set({ ...accommodationsData });
   }
-  getAll() {
-    return;
+
+  async getAll() {
+    const snapshot = await this.db.collection('accommodations').get();
+    return snapshot.docs.map((doc) => doc.data());
+  }
+
+  async getOne(id: string) {
+    const snapshot = await this.db.collection('accommodations').doc(id).get();
+    return snapshot.data();
   }
 }

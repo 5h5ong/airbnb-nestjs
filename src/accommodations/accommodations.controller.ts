@@ -1,6 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AccommodationsService } from './accommodations.service';
 import { CreateAccommodationsDto } from './dto/create-accommodations.dto';
+import { DocumentData } from '@google-cloud/firestore';
 
 @Controller('accommodations')
 export class AccommodationsController {
@@ -9,5 +10,15 @@ export class AccommodationsController {
   @Post()
   create(@Body() accommodationsData: CreateAccommodationsDto) {
     return this.accommodationsService.create(accommodationsData);
+  }
+
+  @Get()
+  getAll() {
+    return this.accommodationsService.getAll();
+  }
+
+  @Get(':id')
+  getOne(@Param('id') id: string) {
+    return this.accommodationsService.getOne(id);
   }
 }
