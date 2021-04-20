@@ -28,4 +28,8 @@ export class AccommodationsService {
     const snapshot = await this.db.collection('accommodations').doc(id).get();
     return snapshot.data();
   }
+
+  delete(id: string) {
+    return this.db.collection('accommodations').doc(id).delete();
+  }
 }
