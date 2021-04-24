@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { AccommodationsService } from './accommodations.service';
 import { CreateAccommodationsDto } from './dto/create-accommodations.dto';
-import { DocumentData } from '@google-cloud/firestore';
 
 @Controller('accommodations')
 export class AccommodationsController {
