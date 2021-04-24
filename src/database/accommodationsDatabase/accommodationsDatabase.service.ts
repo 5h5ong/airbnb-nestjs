@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { CreateAccommodationsDto } from 'src/accommodations/dto/create-accommodations.dto';
 
@@ -20,6 +20,9 @@ export class AccommodationsDatabaseService {
 
   async getOne(id: string) {
     const snapshot = await this.accommodationsCollection.doc(id).get();
+    if (!snapshot.data()) {
+      throw new NotFoundException(`Accommodations with ID ${id} is not found.`);
+    }
     return snapshot.data();
   }
 
