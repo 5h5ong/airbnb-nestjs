@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { CreateAccommodationsDto } from 'src/accommodations/dto/create-accommodations.dto';
+import { UpdateAccommodationsDto } from 'src/accommodations/dto/update-accommodations.dto';
 
 @Injectable()
 export class AccommodationsDatabaseService {
@@ -28,5 +29,11 @@ export class AccommodationsDatabaseService {
 
   delete(id: string) {
     return this.accommodationsCollection.doc(id).delete();
+  }
+
+  update(id: string, accommodationsData: UpdateAccommodationsDto) {
+    return this.accommodationsCollection
+      .doc(id)
+      .update({ ...accommodationsData });
   }
 }

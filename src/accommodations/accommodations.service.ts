@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateAccommodationsDto } from './dto/create-accommodations.dto';
 import { AccommodationsDatabaseService } from 'src/database/accommodationsDatabase/accommodationsDatabase.service';
+import { UpdateAccommodationsDto } from './dto/update-accommodations.dto';
 
 @Injectable()
 export class AccommodationsService {
@@ -22,5 +23,9 @@ export class AccommodationsService {
 
   delete(id: string) {
     return this.accommodationsDatabaseService.delete(id);
+  }
+
+  update(id: string, accommodationsData: UpdateAccommodationsDto) {
+    return this.accommodationsDatabaseService.update(id, accommodationsData);
   }
 }
