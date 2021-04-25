@@ -1,4 +1,3 @@
-import { serviceAccountKey } from '../../serviceAccountKey';
 import * as admin from 'firebase-admin';
 
 export const databaseProviders = [
@@ -11,7 +10,11 @@ export const databaseProviders = [
        * 기존에 다운받은 ServiceAccountKey를 `credential.cert()`의 타입에 맞게 수정함
        */
       admin.initializeApp({
-        credential: admin.credential.cert(serviceAccountKey),
+        credential: admin.credential.cert({
+          projectId: process.env.PROJECT_ID,
+          privateKey: process.env.PRIVATE_KEY,
+          clientEmail: process.env.CLIENT_EMAIL
+        }),
       });
       const db = admin.firestore();
       return db;
