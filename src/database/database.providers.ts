@@ -13,7 +13,7 @@ export const databaseProviders = [
         credential: admin.credential.cert({
           projectId: process.env.PROJECT_ID,
           privateKey: process.env.PRIVATE_KEY,
-          clientEmail: process.env.CLIENT_EMAIL
+          clientEmail: process.env.CLIENT_EMAIL,
         }),
       });
       const db = admin.firestore();
