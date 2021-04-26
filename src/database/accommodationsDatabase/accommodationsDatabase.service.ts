@@ -31,7 +31,13 @@ export class AccommodationsDatabaseService {
     return this.accommodationsCollection.doc(id).delete();
   }
 
-  update(id: string, accommodationsData: UpdateAccommodationsDto) {
+  async update(id: string, accommodationsData: UpdateAccommodationsDto) {
+    // 해당하는 doc id가 없을 때 에러 발생
+    const snapshot = await this.accommodationsCollection.doc(id).get();
+    if (!snapshot.data()) {
+      throw new NotFoundException(`Accommodations with ID ${id} is not found.`);
+    }
+    // doc id가 존재한다면 update 진행
     return this.accommodationsCollection
       .doc(id)
       .update({ ...accommodationsData });
