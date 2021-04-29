@@ -11,5 +11,6 @@ export class UsersDatabaseService {
 
   create(usersData: createUsersDto) {
     this.usersCollection.doc().set({ ...usersData });
+    return usersData;
   }
 }
