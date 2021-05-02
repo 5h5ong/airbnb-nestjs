@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
-import { createUsersDto } from 'src/accommodations/dto/create-users.dto';
+import { createUsersDto } from '../../users/dto/create-users.dto';
 
 @Injectable()
 export class UsersDatabaseService {

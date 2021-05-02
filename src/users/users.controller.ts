@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { createUsersDto } from 'src/accommodations/dto/create-users.dto';
+import { authUserDto } from './dto/auth-users.dto';
+import { createUsersDto } from './dto/create-users.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -11,8 +12,13 @@ export class UsersController {
     return this.usersService.create(usersData);
   }
 
-  @Get(':id')
-  getOne(@Param('id') userId: string) {
-    return this.usersService.getOne(userId);
+  @Get(':email')
+  getOne(@Param('email') email: string) {
+    return this.usersService.getOne(email);
+  }
+
+  @Post('/signin')
+  signIn(@Body() signInData: authUserDto) {
+    return this.usersService.signIn(signInData);
   }
 }

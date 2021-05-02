@@ -1,5 +1,5 @@
 import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
-import { CreateAccommodationsDto } from './create-accommodations.dto';
+import { CreateAccommodationsDto } from '../../accommodations/dto/create-accommodations.dto';
 
 enum USER_ROLE {
   GUEST = 'guest',
