@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from './auth.service';
+import { JwtTokenType } from './jwt.types';
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -16,7 +17,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(email: string, password: string): Promise<any> {
+  /**
+   * Passport.js를 이용한 인증 과정에서 사용됨.(jwt)
+   * @param jwtToken bearer에 있는 jwt token
+   * @returns token과 맞는 User Data
+   */
+  async validate(jwtToken: JwtTokenType): Promise<any> {
+    // 들어오는 jwt token은 해석이 끝난 상태임
+    const { email, password } = jwtToken;
+
+    // 인증이 성공할 시 req.user에 데이터를 넣음
     const user = await this.authService.validateUser(email, password);
     if (!user) {
       throw new UnauthorizedException();
