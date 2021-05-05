@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { CreateAccommodationsDto } from 'src/accommodations/dto/create-accommodations.dto';
 import { UpdateAccommodationsDto } from 'src/accommodations/dto/update-accommodations.dto';
+import { AccommodationObjectType } from './accommodationsDatabase.types';
 
 @Injectable()
 export class AccommodationsDatabaseService {
@@ -20,11 +21,21 @@ export class AccommodationsDatabaseService {
   }
 
   async getOne(id: string) {
-    const snapshot = await this.accommodationsCollection.doc(id).get();
-    if (!snapshot.data()) {
+    const accommodationsDoc = this.accommodationsCollection.doc(id);
+    const snapshot = await accommodationsDoc.get();
+
+    const userData = snapshot.data();
+    if (!userData) {
       throw new NotFoundException(`Accommodations with ID ${id} is not found.`);
     }
-    return snapshot.data();
+
+    // Accommodation에 id를 포함해 Return하게 함
+    const accommodationId = accommodationsDoc.id;
+    const accommodationData: any = {
+      id: accommodationId,
+      ...userData,
+    };
+    return accommodationData;
   }
 
   delete(id: string) {

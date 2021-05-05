@@ -15,10 +15,22 @@ export class UsersDatabaseService {
   }
 
   async getOne(email: string) {
-    const userData = await this.usersCollection
+    const querySnapshot = await this.usersCollection
       .where('email', '==', email)
       .get();
-    // 같은 email은 하나밖에 존재할 수 없으니
-    return userData.docs[0].data();
+
+    /*
+     * 유저는 중복된 email이 없음. 그래서 배열의 첫번째를 가져오는 것
+     */
+    const userDoc = querySnapshot.docChanges()[0];
+    const userId = userDoc.doc.id;
+    const userData = userDoc.doc.data();
+
+    // User의 id를 포함해 Return하게 함
+    const userObject: any = {
+      id: userId,
+      ...userData,
+    };
+    return userObject;
   }
 }
