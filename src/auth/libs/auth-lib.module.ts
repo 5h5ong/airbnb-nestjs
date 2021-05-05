@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { authProviders } from './auth.providers';
+import { authProviders } from './auth-lib.providers';
 
 @Module({
   providers: [...authProviders],
