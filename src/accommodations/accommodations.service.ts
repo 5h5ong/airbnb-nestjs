@@ -9,8 +9,12 @@ export class AccommodationsService {
     private accommodationsDatabaseService: AccommodationsDatabaseService,
   ) {}
 
-  create(accommodationsData: CreateAccommodationsDto) {
-    return this.accommodationsDatabaseService.create(accommodationsData);
+  create(accommodationsData: CreateAccommodationsDto, req: any) {
+    const accommodationObject: CreateAccommodationsDto = {
+      ...accommodationsData,
+      user: req.user.id,
+    };
+    return this.accommodationsDatabaseService.create(accommodationObject);
   }
 
   async getAll() {

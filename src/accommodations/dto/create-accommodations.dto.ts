@@ -17,4 +17,6 @@ export class CreateAccommodationsDto {
   @IsOptional()
   @IsString()
   readonly description: string;
+  /** Accommodations을 생성한 User의 ID */
+  readonly user: string;
 }

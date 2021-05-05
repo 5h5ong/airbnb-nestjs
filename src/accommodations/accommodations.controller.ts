@@ -6,7 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AccommodationsService } from './accommodations.service';
 import { CreateAccommodationsDto } from './dto/create-accommodations.dto';
 import { UpdateAccommodationsDto } from './dto/update-accommodations.dto';
@@ -15,9 +18,10 @@ import { UpdateAccommodationsDto } from './dto/update-accommodations.dto';
 export class AccommodationsController {
   constructor(private readonly accommodationsService: AccommodationsService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Body() accommodationsData: CreateAccommodationsDto) {
-    return this.accommodationsService.create(accommodationsData);
+  create(@Request() req, @Body() accommodationsData: CreateAccommodationsDto) {
+    return this.accommodationsService.create(accommodationsData, req);
   }
 
   @Get()
