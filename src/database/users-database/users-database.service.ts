@@ -1,6 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { createUsersDto } from '../../users/dto/create-users.dto';
+import { updateUsersDto } from 'src/users/dto/update-users.dto';
 
 @Injectable()
 export class UsersDatabaseService {
@@ -32,5 +33,51 @@ export class UsersDatabaseService {
       ...userData,
     };
     return userObject;
+  }
+
+  async getOneFromId(userId: string) {
+    const userData = await this.usersCollection.doc(userId).get();
+
+    return userData.data();
+  }
+
+  async update(userId: string, usersData: updateUsersDto) {
+    const doc = await this.usersCollection.doc(userId);
+
+    // Find User
+    const snapshot = await doc.get();
+
+    if (!snapshot) {
+      throw new NotFoundException(`Users with ID ${userId} is not found.`);
+    }
+
+    // User ID가 존재한다면 Update 진행
+    return doc.update({ ...usersData });
+  }
+
+  /**
+   * Accommodation와 연결
+   */
+  async connectAccommodation(userId: string, accommodationId: string) {
+    const doc = await this.usersCollection.doc(userId);
+
+    const snapshot = await doc.get();
+
+    // Check User
+    if (!snapshot) {
+      throw new NotFoundException(`Users with ID ${userId} is not found.`);
+    }
+
+    // Accommodation ID 연결
+    const accommodations = snapshot.data().accommodations;
+    if (accommodations) {
+      return doc.update({
+        accommodations: [...accommodations, accommodationId],
+      });
+    }
+
+    return doc.update({
+      accommodations: [accommodationId],
+    });
   }
 }
