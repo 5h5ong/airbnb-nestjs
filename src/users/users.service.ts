@@ -47,7 +47,6 @@ export class UsersService {
       // Make the jwt payload
       const jwtPayload = {
         email: email,
-        password: password,
       };
 
       // Jwt sign

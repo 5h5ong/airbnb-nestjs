@@ -14,13 +14,9 @@ export class AuthService {
    *
    * @returns req.user에 붙여질 user data
    */
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string): Promise<any> {
     // Get User Data
     const user = await this.usersService.getOne(email);
-
-    // 패드워드가 일치하면 req.user로 가져온 user data를 추가
-    if (this.authProvider.comparePassword(password, user.password)) {
-      return user;
-    }
+    return user;
   }
 }

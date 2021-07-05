@@ -24,10 +24,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    */
   async validate(jwtToken: JwtTokenType): Promise<any> {
     // 들어오는 jwt token은 해석이 끝난 상태임
-    const { email, password } = jwtToken;
+    const { email } = jwtToken;
 
     // 인증이 성공할 시 req.user에 데이터를 넣음
-    const user = await this.authService.validateUser(email, password);
+    const user = await this.authService.validateUser(email);
     if (!user) {
       throw new UnauthorizedException();
     }
