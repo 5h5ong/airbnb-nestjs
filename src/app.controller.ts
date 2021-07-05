@@ -14,6 +14,12 @@ export class AppController {
   @UseGuards(AuthGuard('jwt'))
   @Get('auth/verify')
   async login(@Request() req) {
-    return req.user;
+    // 필요한 정보들을 골라 반환
+    const userData = {
+      id: req.user.id,
+      role: req.user.role,
+      email: req.user.email,
+    };
+    return userData;
   }
 }
