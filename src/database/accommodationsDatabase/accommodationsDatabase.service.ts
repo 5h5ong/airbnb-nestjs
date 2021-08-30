@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { CreateAccommodationsDto } from 'src/accommodations/dto/create-accommodations.dto';
 import { UpdateAccommodationsDto } from 'src/accommodations/dto/update-accommodations.dto';
+import { RealAccommodationDto } from 'src/accommodations/dto/real-accommodations.dto';
 
 @Injectable()
 export class AccommodationsDatabaseService {
@@ -15,7 +16,7 @@ export class AccommodationsDatabaseService {
     return snapshot.docs.map((doc) => doc.data());
   }
 
-  async create(accommodationsData: CreateAccommodationsDto) {
+  async create(accommodationsData: RealAccommodationDto) {
     const newAccommodationDocument = await this.accommodationsCollection.add({
       ...accommodationsData,
     });

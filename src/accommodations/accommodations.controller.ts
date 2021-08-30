@@ -18,6 +18,11 @@ import { UpdateAccommodationsDto } from './dto/update-accommodations.dto';
 export class AccommodationsController {
   constructor(private readonly accommodationsService: AccommodationsService) {}
 
+  @Get('test')
+  test() {
+    return this.accommodationsService.test();
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Post()
   create(@Request() req, @Body() accommodationsData: CreateAccommodationsDto) {
