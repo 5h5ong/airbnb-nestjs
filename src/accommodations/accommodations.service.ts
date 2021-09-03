@@ -20,6 +20,7 @@ export class AccommodationsService {
 
   async create(accommodationsData: CreateAccommodationsDto, req: any) {
     // return value를 전달해주기 위해 subscribe()를 쓰기보단 toPromise()를 쓰기로 했음
+    // 주소 -> Google Latlng(좌표)
     const data = await this.httpService
       .get('https://maps.googleapis.com/maps/api/geocode/json', {
         params: {
