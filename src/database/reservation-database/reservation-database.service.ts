@@ -8,6 +8,7 @@ export class ReservationDatabaseService {
     @Inject('RESERVATION_COLLECTION')
     private readonly reservationCollection: CollectionReference<DocumentData>,
   ) {}
+
   async create(reservationData: ReservationDto) {
     // reservationData를 그대로 넣으면 prototype을 해석할 수 없어서 에러 뜸
     // 하나하나 분리해서 넣어줌으로 에러 해결

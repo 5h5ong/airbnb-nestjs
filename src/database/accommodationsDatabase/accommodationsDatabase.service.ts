@@ -1,6 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
-import { CreateAccommodationsDto } from 'src/accommodations/dto/create-accommodations.dto';
 import { UpdateAccommodationsDto } from 'src/accommodations/dto/update-accommodations.dto';
 import { RealAccommodationDto } from 'src/accommodations/dto/real-accommodations.dto';
 
@@ -13,7 +12,12 @@ export class AccommodationsDatabaseService {
 
   async getAll() {
     const snapshot = await this.accommodationsCollection.get();
-    return snapshot.docs.map((doc) => doc.data());
+    return snapshot.docs.map((doc) => {
+      // 숙소 데이터에 id도 추가
+      const id = doc.id;
+      const data = doc.data();
+      return { id: id, ...data };
+    });
   }
 
   async create(accommodationsData: RealAccommodationDto) {
