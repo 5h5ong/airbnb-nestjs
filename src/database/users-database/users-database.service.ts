@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { createUsersDto } from '../../users/dto/create-users.dto';
 import { updateUsersDto } from 'src/users/dto/update-users.dto';
+import { doc } from 'prettier';
 
 @Injectable()
 export class UsersDatabaseService {
@@ -78,6 +79,27 @@ export class UsersDatabaseService {
 
     return doc.update({
       accommodations: [accommodationId],
+    });
+  }
+
+  /**
+   * Reservation 연결
+   */
+  async connectReservation(userId: string, reservationId: string) {
+    const userDoc = await this.usersCollection.doc(userId);
+    const userSnapshot = await userDoc.get();
+
+    // Check User
+    if (!userSnapshot) {
+      throw new NotFoundException(`Users with ID ${userId} is not found.`);
+    }
+
+    // Reservation ID 연결
+    const reservations = userSnapshot.data().reservations;
+    return userDoc.update({
+      reservations: reservations
+        ? [...reservations, reservationId]
+        : [reservationId],
     });
   }
 }

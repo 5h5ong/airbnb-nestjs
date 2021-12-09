@@ -18,7 +18,8 @@ export class ReservationDatabaseService {
       reservationDate,
       issuedDate,
     } = reservationData;
-    await this.reservationCollection.add({
+
+    const newReservationDocument = await this.reservationCollection.add({
       userId: userId,
       accommodationsId: accommodationsId,
       reservationData: {
@@ -27,6 +28,13 @@ export class ReservationDatabaseService {
       },
       issuedDate: issuedDate,
     });
-    return reservationData;
+
+    // 생성된 Reservation의 id를 가져와 데이터와 같이 반환함
+    // User, Accommodations의 연결에 필요하기 때문임
+    const doc = await newReservationDocument.get();
+    return {
+      id: doc.id,
+      ...doc.data(),
+    };
   }
 }

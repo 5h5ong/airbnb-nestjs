@@ -67,4 +67,27 @@ export class AccommodationsDatabaseService {
       .doc(id)
       .update({ ...accommodationsData });
   }
+
+  /** Reservation 연결 */
+  async connectReservation(accommodationId: string, reservationId: string) {
+    const accommodationDoc = await this.accommodationsCollection.doc(
+      accommodationId,
+    );
+    const accommodationSnapshot = await accommodationDoc.get();
+
+    // Check Accommodation
+    if (!accommodationSnapshot) {
+      throw new NotFoundException(
+        `Accommodation with ID ${accommodationId} is not found.`,
+      );
+    }
+
+    // connect reservation id
+    const reservations = accommodationSnapshot.data().reservations;
+    return accommodationDoc.update({
+      reservations: reservations
+        ? [...reservations, reservationId]
+        : [reservationId],
+    });
+  }
 }

@@ -1,4 +1,5 @@
 import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
+import { ReservationDto } from 'src/accommodations/reservation/dto/reservation.dto';
 import { CreateAccommodationsDto } from '../../accommodations/dto/create-accommodations.dto';
 
 enum USER_ROLE {
@@ -22,5 +23,7 @@ export class createUsersDto {
   role: USER_ROLE;
   @IsArray({ each: true })
   @IsOptional()
-  accommodations: CreateAccommodationsDto[];
+  accommodations: string[];
+  @IsOptional()
+  reservations: string[];
 }

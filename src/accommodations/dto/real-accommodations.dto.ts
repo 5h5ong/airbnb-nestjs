@@ -1,4 +1,4 @@
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { CreateAccommodationsDto } from './create-accommodations.dto';
 
 /**
@@ -9,4 +9,7 @@ export class RealAccommodationDto extends CreateAccommodationsDto {
   readonly lat: number;
   @IsNumber()
   readonly lng: number;
+  @IsOptional()
+  @IsString({ each: true })
+  readonly reservations?: string[];
 }
