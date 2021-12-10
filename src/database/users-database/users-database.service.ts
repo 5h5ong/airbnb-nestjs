@@ -2,7 +2,6 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { createUsersDto } from '../../users/dto/create-users.dto';
 import { updateUsersDto } from 'src/users/dto/update-users.dto';
-import { doc } from 'prettier';
 
 @Injectable()
 export class UsersDatabaseService {
@@ -25,15 +24,20 @@ export class UsersDatabaseService {
      * 유저는 중복된 email이 없음. 그래서 배열의 첫번째를 가져오는 것
      */
     const userDoc = querySnapshot.docChanges()[0];
-    const userId = userDoc.doc.id;
-    const userData = userDoc.doc.data();
+    // Email이 존재하지 않으면 예외 발생!
+    if (!userDoc) {
+      throw new NotFoundException(`Email ${email} is not found!`);
+    } else {
+      const userId = userDoc.doc.id;
+      const userData = userDoc.doc.data();
 
-    // User의 id를 포함해 Return하게 함
-    const userObject: any = {
-      id: userId,
-      ...userData,
-    };
-    return userObject;
+      // User의 id를 포함해 Return하게 함
+      const userObject: any = {
+        id: userId,
+        ...userData,
+      };
+      return userObject;
+    }
   }
 
   async getOneFromId(userId: string) {
