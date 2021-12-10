@@ -18,11 +18,6 @@ import { UpdateAccommodationsDto } from './dto/update-accommodations.dto';
 export class AccommodationsController {
   constructor(private readonly accommodationsService: AccommodationsService) {}
 
-  @Get('test')
-  test() {
-    return this.accommodationsService.test();
-  }
-
   @UseGuards(AuthGuard('jwt'))
   @Post()
   create(@Request() req, @Body() accommodationsData: CreateAccommodationsDto) {
@@ -37,6 +32,19 @@ export class AccommodationsController {
   @Get(':id')
   getOne(@Param('id') id: string) {
     return this.accommodationsService.getOne(id);
+  }
+
+  /** Computed Field를 포함한 Accommodation Data */
+  @UseGuards(AuthGuard('jwt'))
+  @Get('computed/:id')
+  getOneWithComputedField(
+    @Request() req,
+    @Param('id') accommodationId: string,
+  ) {
+    return this.accommodationsService.getOneWithComputedField(
+      accommodationId,
+      req.user.id,
+    );
   }
 
   @Delete(':id')

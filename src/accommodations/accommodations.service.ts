@@ -5,18 +5,17 @@ import { UpdateAccommodationsDto } from './dto/update-accommodations.dto';
 import { UsersDatabaseService } from 'src/database/users-database/users-database.service';
 import { map } from 'rxjs/operators';
 import { RealAccommodationDto } from './dto/real-accommodations.dto';
+import { ReservationService } from './reservation/reservation.service';
+import { ReservationDatabaseService } from 'src/database/reservation-database/reservation-database.service';
 
 @Injectable()
 export class AccommodationsService {
   constructor(
     private accommodationsDatabaseService: AccommodationsDatabaseService,
     private userDatabaseService: UsersDatabaseService,
+    private reservationDatabaseService: ReservationDatabaseService,
     private httpService: HttpService,
   ) {}
-
-  async test() {
-    return 'just test.';
-  }
 
   async create(accommodationsData: CreateAccommodationsDto, req: any) {
     // return value를 전달해주기 위해 subscribe()를 쓰기보단 toPromise()를 쓰기로 했음
@@ -58,6 +57,27 @@ export class AccommodationsService {
 
   async getOne(id: string) {
     return this.accommodationsDatabaseService.getOne(id);
+  }
+
+  async getOneWithComputedField(id: string, requestUserId: string) {
+    const accommodationData = await this.accommodationsDatabaseService.getOne(
+      id,
+    );
+    const { reservations } = accommodationData;
+    return {
+      ...accommodationData,
+      isReserve: await (async () => {
+        for (const reservationId of reservations) {
+          const { userId } = await this.reservationDatabaseService.getOneFromId(
+            reservationId,
+          );
+          if (userId === requestUserId) {
+            return true;
+          }
+        }
+        return false;
+      })(),
+    };
   }
 
   delete(id: string) {
