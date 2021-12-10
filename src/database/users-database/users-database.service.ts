@@ -102,4 +102,28 @@ export class UsersDatabaseService {
         : [reservationId],
     });
   }
+  /**
+   * Reservation 삭제
+   */
+  async disconnectReservation(userId: string, reservationId: string) {
+    const uesrDoc = await this.usersCollection.doc(userId);
+    const userSnapshot = await uesrDoc.get();
+    const userData = userSnapshot.data();
+
+    if (!userSnapshot) {
+      throw new NotFoundException(`Users with ID ${userId} is not found.`);
+    }
+
+    // delete reservation id
+    const { reservations } = userData;
+    if (!reservations) {
+      throw new NotFoundException(`"reservations" in Users is Empty.`);
+    }
+
+    return uesrDoc.update({
+      reservations: reservations.filter(
+        (reservation) => reservation !== reservationId,
+      ),
+    });
+  }
 }

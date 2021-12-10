@@ -25,4 +25,23 @@ export class ReservationService {
       newReservationData.id,
     );
   }
+  async delete(reservationId: string) {
+    // get user and accommodation id
+    const reservationData = await this.reservationDatabaseService.getOneFromId(
+      reservationId,
+    );
+    const { userId, accommodationsId } = reservationData;
+
+    // delete reservation id in User
+    this.usersDatabaseService.disconnectReservation(userId, reservationId);
+    this.accommodationsDatabaseService.disconnectReservation(
+      accommodationsId,
+      reservationId,
+    );
+
+    // delete reservation
+    this.reservationDatabaseService.delete(reservationId);
+
+    return { userId, accommodationsId };
+  }
 }

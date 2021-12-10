@@ -4,7 +4,7 @@ import { Provider } from '@nestjs/common';
 export const reservationDatabaseProviders: Provider = {
   provide: 'RESERVATION_COLLECTION',
   useFactory: (db: Firestore) => {
-    const reservationCollection = db.collection('reservation');
+    const reservationCollection = db.collection('reservations');
     return reservationCollection;
   },
   inject: ['DATABASE_CONNECTION'],

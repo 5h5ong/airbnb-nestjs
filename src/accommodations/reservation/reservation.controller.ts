@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { ReservationService } from './reservation.service';
@@ -15,5 +23,9 @@ export class ReservationController {
       ...reservationData,
       userId: req.user.id,
     });
+  }
+  @Get('delete/:reservationId')
+  delete(@Param('reservationId') reservationId: string) {
+    return this.reservationService.delete(reservationId);
   }
 }

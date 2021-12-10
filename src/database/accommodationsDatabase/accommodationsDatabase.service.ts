@@ -90,4 +90,31 @@ export class AccommodationsDatabaseService {
         : [reservationId],
     });
   }
+
+  /** Reservation 삭제 */
+  async disconnectReservation(accommodationId: string, reservationId: string) {
+    const accommodationDoc = await this.accommodationsCollection.doc(
+      accommodationId,
+    );
+    const accommodationSnapshot = await accommodationDoc.get();
+    const accommodationData = accommodationSnapshot.data();
+
+    if (!accommodationSnapshot) {
+      throw new NotFoundException(
+        `Accommodation with ID ${accommodationId} is not found.`,
+      );
+    }
+
+    // delete reservation id
+    const { reservations } = accommodationData;
+    if (!reservations) {
+      throw new NotFoundException(`"reservations" in Users is Empty.`);
+    }
+
+    return accommodationDoc.update({
+      reservations: reservations.filter(
+        (reservation) => reservation !== reservationId,
+      ),
+    });
+  }
 }

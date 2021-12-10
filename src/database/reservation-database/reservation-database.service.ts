@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CollectionReference, DocumentData } from '@google-cloud/firestore';
 import { ReservationDto } from 'src/accommodations/reservation/dto/reservation.dto';
 
@@ -36,5 +36,25 @@ export class ReservationDatabaseService {
       id: doc.id,
       ...doc.data(),
     };
+  }
+
+  async getOneFromId(reservationId: string) {
+    const userData = await this.reservationCollection.doc(reservationId).get();
+    return userData.data();
+  }
+
+  async delete(reservationId: string) {
+    const reservationDoc = await this.reservationCollection.doc(reservationId);
+    if (!reservationDoc) {
+      throw new NotFoundException(
+        `Reservation with ID ${reservationId} is not found.`,
+      );
+    }
+
+    try {
+      await reservationDoc.delete();
+    } catch (e) {
+      throw e;
+    }
   }
 }
