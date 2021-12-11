@@ -22,7 +22,7 @@ export class ReservationDatabaseService {
     const newReservationDocument = await this.reservationCollection.add({
       userId: userId,
       accommodationsId: accommodationsId,
-      reservationData: {
+      reservationDate: {
         start: reservationDate.start,
         end: reservationDate.end,
       },

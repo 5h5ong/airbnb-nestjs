@@ -31,7 +31,7 @@ export class ReservationController {
     });
   }
 
-  @Get('delete/:reservationId')
+  @Get('/delete/:reservationId')
   delete(@Param('reservationId') reservationId: string) {
     return this.reservationService.delete(reservationId);
   }
