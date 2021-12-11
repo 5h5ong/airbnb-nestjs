@@ -5,7 +5,6 @@ import { UpdateAccommodationsDto } from './dto/update-accommodations.dto';
 import { UsersDatabaseService } from 'src/database/users-database/users-database.service';
 import { map } from 'rxjs/operators';
 import { RealAccommodationDto } from './dto/real-accommodations.dto';
-import { ReservationService } from './reservation/reservation.service';
 import { ReservationDatabaseService } from 'src/database/reservation-database/reservation-database.service';
 
 @Injectable()
@@ -66,16 +65,17 @@ export class AccommodationsService {
     const { reservations } = accommodationData;
     return {
       ...accommodationData,
-      isReserve: await (async () => {
+      requestUserReservation: await (async () => {
         for (const reservationId of reservations) {
-          const { userId } = await this.reservationDatabaseService.getOneFromId(
+          const requestUserReservationData = await this.reservationDatabaseService.getOneFromId(
             reservationId,
           );
+          const { userId } = requestUserReservationData;
           if (userId === requestUserId) {
-            return true;
+            return requestUserReservationData;
           }
         }
-        return false;
+        return {};
       })(),
     };
   }
