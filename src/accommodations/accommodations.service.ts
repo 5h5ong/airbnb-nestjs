@@ -66,13 +66,15 @@ export class AccommodationsService {
     return {
       ...accommodationData,
       requestUserReservation: await (async () => {
-        for (const reservationId of reservations) {
-          const requestUserReservationData = await this.reservationDatabaseService.getOneFromId(
-            reservationId,
-          );
-          const { userId } = requestUserReservationData;
-          if (userId === requestUserId) {
-            return requestUserReservationData;
+        if (reservations) {
+          for (const reservationId of reservations) {
+            const requestUserReservationData = await this.reservationDatabaseService.getOneFromId(
+              reservationId,
+            );
+            const { userId } = requestUserReservationData;
+            if (userId === requestUserId) {
+              return requestUserReservationData;
+            }
           }
         }
         return {};
