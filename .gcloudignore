@@ -18,5 +18,7 @@ node_modules/
 dist/
 
 # ETC
+.eslintrc.js
 .prettierrc
 .env.dev
+README.md
