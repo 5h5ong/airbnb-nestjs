@@ -15,7 +15,7 @@ export class UsersDatabaseService {
     return usersData;
   }
 
-  async getOne(email: string) {
+  async getOneFromEmail(email: string) {
     const querySnapshot = await this.usersCollection
       .where('email', '==', email)
       .get();
@@ -41,9 +41,13 @@ export class UsersDatabaseService {
   }
 
   async getOneFromId(userId: string) {
-    const userData = await this.usersCollection.doc(userId).get();
-
-    return userData.data();
+    const userSnapshot = await this.usersCollection.doc(userId).get();
+    const userData = userSnapshot.data();
+    if (userData) {
+      return userData;
+    } else {
+      throw new NotFoundException(`User Id ${userId} is not found!`);
+    }
   }
 
   async update(userId: string, usersData: updateUsersDto) {

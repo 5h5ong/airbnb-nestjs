@@ -36,7 +36,7 @@ export class UsersService {
   async signIn(signInData: authUserDto) {
     const { email, password } = signInData;
 
-    const user = await this.usersDatabaseService.getOne(email);
+    const user = await this.usersDatabaseService.getOneFromEmail(email);
     // Check user exists
     if (!user) {
       throw new NotFoundException(`${email}은 존재하지 않습니다.`);
@@ -58,7 +58,11 @@ export class UsersService {
     throw new NotFoundException(`입력된 패스워드는 존재하지 않습니다.`);
   }
 
-  getOne(email: string) {
-    return this.usersDatabaseService.getOne(email);
+  getOneFromEmail(email: string) {
+    return this.usersDatabaseService.getOneFromEmail(email);
+  }
+
+  getOneFromId(id: string) {
+    return this.usersDatabaseService.getOneFromId(id);
   }
 }

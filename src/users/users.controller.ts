@@ -13,8 +13,13 @@ export class UsersController {
   }
 
   @Get(':email')
-  getOne(@Param('email') email: string) {
-    return this.usersService.getOne(email);
+  getOneFromEmail(@Param('email') email: string) {
+    return this.usersService.getOneFromEmail(email);
+  }
+
+  @Get('id/:id')
+  getOneFromId(@Param('id') id: string) {
+    return this.usersService.getOneFromId(id);
   }
 
   @Post('/signin')
