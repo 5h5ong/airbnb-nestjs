@@ -4,11 +4,15 @@ import { UsersDatabaseService } from 'src/database/users-database/users-database
 import { JwtService } from '@nestjs/jwt';
 import { authUserDto } from './dto/auth-users.dto';
 import { AuthLibs } from 'src/auth/libs/auth.lib';
+import { AccommodationsDatabaseService } from 'src/database/accommodationsDatabase/accommodationsDatabase.service';
+import { ReservationDatabaseService } from 'src/database/reservation-database/reservation-database.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersDatabaseService: UsersDatabaseService,
+    private readonly accommodationsDatabaseService: AccommodationsDatabaseService,
+    private readonly reservationsDatabaseService: ReservationDatabaseService,
     private readonly jwtService: JwtService,
     @Inject('AUTH')
     private readonly authProvider: AuthLibs,
@@ -64,5 +68,35 @@ export class UsersService {
 
   getOneFromId(id: string) {
     return this.usersDatabaseService.getOneFromId(id);
+  }
+
+  /**
+   * 유저 데이터와 함께 온전한 숙소, 예약 데이터를 조회
+   *
+   * @remarks
+   * `getOneFromId`와 같은 것들은 숙소, 예약 데이터를 id만 조회함.
+   * 하지만 이 메소드는 완전히 갖춰진 숙소, 예약 데이터를 조회함.
+   */
+  async getOneFromIdWithFullData(id: string) {
+    const userData = await this.usersDatabaseService.getOneFromId(id);
+    const { accommodations, reservations } = userData;
+
+    // 숙소 가져오기
+    const fullOfAccommodationsPromise = accommodations.map((id) => {
+      return this.accommodationsDatabaseService.getOne(id);
+    });
+    const fullOfAccommodations = await Promise.all(fullOfAccommodationsPromise);
+
+    // 예약 가져오기
+    const fullOfReservationsPromise = reservations.map((id) => {
+      return this.reservationsDatabaseService.getOneFromId(id);
+    });
+    const fullOfReservations = await Promise.all(fullOfReservationsPromise);
+
+    return {
+      ...userData,
+      accommodations: [...fullOfAccommodations],
+      reservations: [...fullOfReservations],
+    };
   }
 }

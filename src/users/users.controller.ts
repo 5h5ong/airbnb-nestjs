@@ -22,6 +22,11 @@ export class UsersController {
     return this.usersService.getOneFromId(id);
   }
 
+  @Get('id/full/:id')
+  getOneFromIdWithFullData(@Param('id') id: string) {
+    return this.usersService.getOneFromIdWithFullData(id);
+  }
+
   @Post('/signin')
   signIn(@Body() signInData: authUserDto) {
     return this.usersService.signIn(signInData);
