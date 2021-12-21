@@ -39,8 +39,20 @@ export class ReservationDatabaseService {
   }
 
   async getOneFromId(reservationId: string) {
-    const userData = await this.reservationCollection.doc(reservationId).get();
-    return userData.data();
+    const reservationSnapshot = await this.reservationCollection
+      .doc(reservationId)
+      .get();
+    const reservationData = await reservationSnapshot.data();
+
+    if (!reservationData) {
+      throw new NotFoundException(
+        `Reservation with ID ${reservationId} is not found.`,
+      );
+    }
+
+    return {
+      ...reservationData,
+    };
   }
 
   async delete(reservationId: string) {
