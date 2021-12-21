@@ -88,8 +88,19 @@ export class UsersService {
     const fullOfAccommodations = await Promise.all(fullOfAccommodationsPromise);
 
     // 예약 가져오기
-    const fullOfReservationsPromise = reservations.map((id) => {
-      return this.reservationsDatabaseService.getOneFromId(id);
+    const fullOfReservationsPromise = reservations.map(async (id) => {
+      // 예약 안의 숙소 데이터 조회
+      const reservationData = await this.reservationsDatabaseService.getOneFromId(
+        id,
+      );
+      const { accommodationsId } = reservationData;
+      const accommodationData = await this.accommodationsDatabaseService.getOne(
+        accommodationsId,
+      );
+      return {
+        ...reservationData,
+        accommodationData: accommodationData,
+      };
     });
     const fullOfReservations = await Promise.all(fullOfReservationsPromise);
 

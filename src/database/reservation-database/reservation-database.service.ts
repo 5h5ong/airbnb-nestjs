@@ -39,9 +39,8 @@ export class ReservationDatabaseService {
   }
 
   async getOneFromId(reservationId: string) {
-    const reservationSnapshot = await this.reservationCollection
-      .doc(reservationId)
-      .get();
+    const reservationDoc = this.reservationCollection.doc(reservationId);
+    const reservationSnapshot = await reservationDoc.get();
     const reservationData = await reservationSnapshot.data();
 
     if (!reservationData) {
@@ -50,9 +49,14 @@ export class ReservationDatabaseService {
       );
     }
 
-    return {
+    // Reservation's Id
+    const id = reservationDoc.id;
+    const returnObject = {
+      id: id,
       ...reservationData,
     };
+
+    return { ...returnObject } as any;
   }
 
   async delete(reservationId: string) {

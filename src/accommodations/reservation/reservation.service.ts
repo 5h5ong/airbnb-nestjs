@@ -1,4 +1,4 @@
-import { Get, Injectable, Param } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AccommodationsDatabaseService } from 'src/database/accommodationsDatabase/accommodationsDatabase.service';
 import { ReservationDatabaseService } from 'src/database/reservation-database/reservation-database.service';
 import { UsersDatabaseService } from 'src/database/users-database/users-database.service';
