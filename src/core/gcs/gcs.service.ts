@@ -18,11 +18,13 @@ export class GcsService {
     // GCS 형식에 맞는 파일 생성
     const newFile = this.baseBuckets.file(originalname);
     // GCS에 저장
+
     try {
-      const results = await newFile.save(buffer, {
+      await newFile.save(buffer, {
         contentType: mimetype,
+        public: true,
       });
-      return results;
+      return originalname;
     } catch (error) {
       throw new ForbiddenException();
     }
