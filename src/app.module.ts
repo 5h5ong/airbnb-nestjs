@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ReservationModule } from './accommodations/reservation/reservation.module';
+import { UploadModule } from './upload/upload.module';
+import { GcsService } from './core/gcs/gcs.service';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { ReservationModule } from './accommodations/reservation/reservation.modu
     UsersModule,
     AuthModule,
     ReservationModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
