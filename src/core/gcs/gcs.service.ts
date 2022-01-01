@@ -24,9 +24,12 @@ export class GcsService {
         contentType: mimetype,
         public: true,
       });
+      console.log(`[gcs.service] ${originalname} 업로드 완료`);
       return originalname;
     } catch (error) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        `${originalname} 업로드 중 문제가 발생했습니다.`,
+      );
     }
   }
 }
