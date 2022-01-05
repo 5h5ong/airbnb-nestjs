@@ -134,4 +134,29 @@ export class UsersDatabaseService {
       ),
     });
   }
+
+  /**
+   * Accommodation 삭제
+   */
+  async disconnectAccommodation(userId: string, accommodationId: string) {
+    const userDoc = await this.usersCollection.doc(userId);
+    const userSnapshot = await userDoc.get();
+    const userData = userSnapshot.data();
+
+    if (!userSnapshot) {
+      throw new NotFoundException(`User with ID ${userId} is not found.`);
+    }
+
+    const { accommodations } = userData;
+    if (!accommodations) {
+      throw new NotFoundException(
+        `Accommodation with ID ${userId} is not found.`,
+      );
+    }
+    return userDoc.update({
+      accommodations: accommodations.filter(
+        (accommodation) => accommodation !== accommodationId,
+      ),
+    });
+  }
 }

@@ -6,6 +6,7 @@ import { UsersDatabaseService } from 'src/database/users-database/users-database
 import { map } from 'rxjs/operators';
 import { RealAccommodationDto } from './dto/real-accommodations.dto';
 import { ReservationDatabaseService } from 'src/database/reservation-database/reservation-database.service';
+import { ReservationService } from './reservation/reservation.service';
 
 @Injectable()
 export class AccommodationsService {
@@ -13,6 +14,7 @@ export class AccommodationsService {
     private accommodationsDatabaseService: AccommodationsDatabaseService,
     private userDatabaseService: UsersDatabaseService,
     private reservationDatabaseService: ReservationDatabaseService,
+    private reservationService: ReservationService,
     private httpService: HttpService,
   ) {}
 
@@ -47,7 +49,10 @@ export class AccommodationsService {
       accommodationData.id,
     );
 
-    return accommodationObject;
+    return {
+      ...accommodationObject,
+      accommodationId: accommodationData.id,
+    };
   }
 
   async getAll() {
@@ -82,7 +87,25 @@ export class AccommodationsService {
     };
   }
 
-  delete(id: string) {
+  async delete(id: string) {
+    const accommodationData = await this.getOne(id);
+    const { reservations, user } = accommodationData;
+
+    // Remove Reservations
+    if (reservations) {
+      const reservationsDeletePromise = reservations.map(
+        async (reservation) =>
+          await this.reservationService.delete(reservation),
+      );
+      await Promise.all(reservationsDeletePromise);
+    }
+
+    // Remove From User
+    if (user) {
+      await this.userDatabaseService.disconnectAccommodation(user, id);
+    }
+
+    // Remove Accommodation
     return this.accommodationsDatabaseService.delete(id);
   }
 
